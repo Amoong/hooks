@@ -1,14 +1,19 @@
-export const useClick = onClick => {
-  const element = useRef();
-  useEffect(() => {
-    if (element.current) {
-      element.current.addEventListener("click", onClick);
-    }
+export const useConfirm = (message = "", onConfirm, onCancel) => {
+  if (!onConfirm || typeof onConfirm !== "function") {
+    return;
+  }
 
-    return () => {
-      if (element.current)
-        element.current.removeEventListener("click", onClick);
-    };
-  }, []);
-  return element;
+  if (onCancel && typeof onCancel !== "function") {
+    return;
+  }
+
+  const confirmAction = () => {
+    if (window.confirm(message)) {
+      onConfirm();
+    } else {
+      onCancel();
+    }
+  };
+
+  return confirmAction;
 };
